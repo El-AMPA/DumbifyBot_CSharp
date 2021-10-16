@@ -71,6 +71,7 @@ namespace Dumbify_CSharp
 
 		static async Task BotOnInlineQueryReceived(ITelegramBotClient botClient, InlineQuery query)
 		{
+			Console.WriteLine("Inline query: " + query.Query + " recieved from " + query.From.Username);
 			InlineQueryResultBase[] results = {
 				// displayed result
 				new InlineQueryResultArticle(
@@ -91,10 +92,8 @@ namespace Dumbify_CSharp
 
 		static async Task BotOnMessageReceived(ITelegramBotClient botClient, Message message)
 		{
+			Console.WriteLine("Message: " + message.Text + " recieved from " + message.From.Username);
 			var chatId = message.Chat.Id;
-			var senderName = message.From.FirstName;
-
-			Console.WriteLine("Received message: " + message.Text + " from " + senderName);
 
 			await botClient.SendTextMessageAsync(chatId: chatId, text: DumbifyText(message.Text));
 		}
