@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -14,7 +15,29 @@ namespace Dumbify_CSharp
 	{
 		static async Task Main(string[] args)
 		{
-			var botClient = new TelegramBotClient("1704982427:AAFL55HPUrj65dEG3mxraxbsNsqCGLINGp8");
+			/*Si estamos depurando en visual studio, tenemos que cambiar la ruta relativa en PC
+			* para que funcione igual que en el contenedor de Docker*/
+			if (Environment.GetEnvironmentVariable("PLATFORM_PC") != null)
+			{
+				Console.WriteLine("Estamos en PC");
+				Directory.SetCurrentDirectory("./../../..");
+			}
+			else
+			{
+				Console.WriteLine("Estamos en Docker");
+			}
+
+			string token = "";
+			try
+			{
+				token = System.IO.File.ReadAllText("assets/token.txt");
+			}
+			catch (FileNotFoundException e)
+			{
+				Console.WriteLine("No se ha encontrado el archivo token.txt en la raíz del proyecto.");
+				Environment.Exit(-1);
+			}
+			var botClient = new TelegramBotClient(token);
 			var me = await botClient.GetMeAsync();
 			Console.WriteLine("Hello World! I am user " + me.Id + " and my name is " + me.FirstName);
 
@@ -23,7 +46,10 @@ namespace Dumbify_CSharp
 			botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), cts.Token);
 
 			Console.WriteLine($"Start listening for @{me.Username}");
-			Console.ReadLine();
+            while (true)
+            {
+				Console.WriteLine("Listening...");
+            }
 
 			cts.Cancel();
 		}

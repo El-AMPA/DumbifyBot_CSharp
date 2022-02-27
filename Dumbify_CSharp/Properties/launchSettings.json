@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Dumbify_CSharp": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
